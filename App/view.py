@@ -35,10 +35,16 @@ operación solicitada
 """
 
 def printMenu():
-    print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
-
+    print("**********Bienvenido**********")
+    print("1- Iniciar el catalogo")
+    print("2- Cargar información al catalogo")
+    print("3- (Requerimiento 1) Encontrar la cantidad de clusteres en la red" + 
+          "y comprobar si dos landing points pertenecen al mismo cluster")
+    print("4- (Requerimiento 2) Encontrar la ruta minima para enviar información entre dos paises")
+    print("5- (Requerimiento 3) Identificar la red de expansión minima")
+    print("0- Salir de la aplicación")
+    print("*******************************")
+    
 catalog = None
 
 """
@@ -46,13 +52,38 @@ Menu principal
 """
 while True:
     printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
+    inputs = input('Seleccione una opción para continuar\n>')
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
+        print("Iniciando el catalogo ....")
+        #Se inicia el catalogo
+        print("El catalogo se ha iniciado con exito\n")
 
     elif int(inputs[0]) == 2:
-        pass
+        print("Cargando información al catalogo ....")
+        #Se carga información al catalogo
+        print("Se ha cargado la información con exito")
+        #printCargaDatos(catalog)
 
+    elif int(inputs[0]) == 3:
+        print("Introduzca el nombre de los dos landing points")
+        LandingPoint1 = input("Nombre del primer Landing Point:\n>")
+        LandingPoint2 = input("Nombre del segundo Landing Point:\n>")
+        print("Cargando información ....")
+        #Req1 = getReq1(catalog, LandingPoint1, LandingPoint2)
+        #printReq1(Req1)
+
+    elif int(inputs[0]) == 4:
+        print("Introduzca el nombre de dos paises. El primero es el pais de origen del cable")
+        paisA = input("Nombre del pais de origen:\n>")
+        paisB = input("Nombre del pais destino:\n")
+        print("Cargando información ....")
+        #Req2 = getReq2(catalog, paisA, paisB)
+        #printReq2(Req2)
+
+    elif int(inputs[0]) == 5:
+        print("Cargando información ....")
+        #Req3 = getReq3(catalog)
+        #printReq3(Req3)
     else:
         sys.exit(0)
 sys.exit(0)

@@ -31,7 +31,49 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Inicialización del Catálogo de libros
 
+
+def initCatalog():
+    """
+    Llama la función de inicialización del catalogo del modelo
+    """
+    catalog = model.newCatalog()
+    return catalog
+
 # Funciones para la carga de datos
+
+
+def loadData(catalog):
+    retorno = -1.0
+    loadConnections(catalog)
+    loadCountries(catalog)
+    loadLandingPoints(catalog)
+    
+    return retorno
+
+
+def loadConnections(catalog):
+    connectionsfile = cf.data_dir + 'connections.csv'
+    input_file = csv.DictReader(open(connectionsfile, encoding="utf-8"), delimiter=',')
+    n = 0
+    for entry in input_file:
+        n += 1
+
+
+def loadCountries(catalog):
+    countriesfile = cf.data_dir + 'countries.csv'
+    input_file = csv.DictReader(open(countriesfile, encoding="utf-8"), delimiter=',')
+    n = 0
+    for entry in input_file:
+        n += 1
+
+
+def loadLandingPoints(catalog):
+    landingPointsfile = cf.data_dir + 'landing_points.csv'
+    input_file = csv.DictReader(open(landingPointsfile, encoding="utf-8"), delimiter=',')
+    n = 0
+    for entry in input_file:
+        n += 1
+
 
 # Funciones de ordenamiento
 
