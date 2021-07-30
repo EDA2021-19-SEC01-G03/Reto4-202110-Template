@@ -64,8 +64,8 @@ def addCountry(catalog, country):
     addCountryGraph(catalog['GraphName'], country)
 
 
-def addCountryHash(hash, country):
-    mp.put(hash, country['CountryName'], country)
+def addCountryHash(hashCountry, country):
+    mp.put(hashCountry, country['CountryName'], country)
 
 
 def addCountryGraph(graph, country):
@@ -78,8 +78,39 @@ def addLandingPoint(catalog, landingPoint):
     addLandingPointGraph(catalog['GraphName'], landingPoint)
 
 
-def addLandingPointHash(hash, LandingPoint):
-    mp.put(hash, LandingPoint['landing_point_id'], LandingPoint)
+def addLandingPointHash(hashidInfo, LandingPoint):
+    mp.put(hashidInfo, LandingPoint['landing_point_id'], LandingPoint)
+    return None
+
+
+def getLandingPointInfo(hashidInfo, LandingPointid):
+    pair = mp.get(hashidInfo, LandingPointid)
+    retorno = {'name': None, 'pos': None}
+    if pair:
+        info = me.getValue(pair)
+        name = info['name'].split()[0]
+        pos = [info['latitude'], info['longitude']]
+        retorno['name'] = name
+        retorno['pos'] = pos
+        return retorno
+    else:
+        print('No se encontro el Landing point. Programa va a explotar')
+        return None
+
+
+def addConnection(catalog, connection):
+    originid = connection['origin']
+    destinyid = connection['destination']
+    graph = catalog['GraphName']
+    hashidInfo = catalog['hashidInfo']
+    originInfo = getLandingPointInfo(hashidInfo, originid)
+    destinyInfo = getLandingPointInfo(hashidInfo, destinyid)
+    addConnectionEdge(graph, originInfo, destinyInfo)
+
+
+def addConnectionEdge(graph, originInfo, destinyInfo):
+    costo = hs.haversine(originInfo['pos'], destinyInfo['pos'])
+    gr.addEdge(graph, originInfo['name'], destinyInfo['name'], costo)
 
 
 # Funciones para creacion de datos
@@ -95,4 +126,4 @@ def addLandingPointHash(hash, LandingPoint):
 loc1 = [28.426846, 77.088834] La primera coordenada de la tupla es la latitud, la segunda coordenada es la longitud
 loc2 = [28.394231, 77.050308]
 a = hs.haversine(loc1, loc2)  Esta función devuelve la distancia en km. Lo que nos funciona ya que todos los requerimientos piden kilometros como unidades
-""""
+"""

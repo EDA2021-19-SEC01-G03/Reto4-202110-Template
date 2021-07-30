@@ -56,6 +56,7 @@ def loadConnections(catalog):
     input_file = csv.DictReader(open(connectionsfile, encoding="utf-8"), delimiter=',')
     n = 0
     for entry in input_file:
+        model.addConnection(catalog, entry)
         n += 1
 
 
