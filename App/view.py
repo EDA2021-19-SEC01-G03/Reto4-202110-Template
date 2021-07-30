@@ -56,6 +56,7 @@ while True:
     if int(inputs[0]) == 1:
         print("Iniciando el catalogo ....")
         #Se inicia el catalogo
+        catalog = controller.initCatalog()
         print("El catalogo se ha iniciado con exito\n")
 
     elif int(inputs[0]) == 2:

@@ -57,6 +57,30 @@ def newCatalog():
     return catalog
 # Funciones para agregar informacion al catalogo
 
+
+def addCountry(catalog, country):
+    addCountryHash(catalog['hashCountryCap'], country)
+    addCountryGraph(catalog['GraphName'], country)
+
+
+def addCountryHash(hash, country):
+    mp.put(hash, country['CountryName'], country)
+
+
+def addCountryGraph(graph, country):
+    vertex = country['CapitalName']
+    gr.insertVertex(graph, vertex)
+
+
+def addLandingPoint(catalog, landingPoint):
+    addLandingPointHash(catalog['hashidInfo'], landingPoint)
+    addLandingPointGraph(catalog['GraphName'], landingPoint)
+
+
+def addLandingPointHash(hash, LandingPoint):
+    mp.put(hash, LandingPoint['landing_point_id'], LandingPoint)
+
+
 # Funciones para creacion de datos
 
 # Funciones de consulta
