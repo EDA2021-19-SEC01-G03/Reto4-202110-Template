@@ -28,6 +28,7 @@
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.ADT import graph as gr
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
@@ -44,15 +45,16 @@ def newCatalog():
     """
     Crea un catalogo vacio
     """
-    catalog = {}
+    catalog = {'hashCountryCap': None, 'hashidInfo': None, 'GraphName': None }
     
-    
+    catalog['hashCountryCap'] = mp.newMap(maptype='PROBING')
+    catalog['hashidInfo'] = mp.newMap(maptype='PROBING')
+    catalog['GraphName'] = gr.newGraph(directed=True, size=0)
     
     
     
     
     return catalog
-
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
