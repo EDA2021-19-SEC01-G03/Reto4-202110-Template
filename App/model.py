@@ -26,6 +26,7 @@
 
 
 import config as cf
+import haversine as hs
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.ADT import graph as gr
@@ -88,3 +89,10 @@ def addLandingPointHash(hash, LandingPoint):
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento
+
+
+"""
+loc1 = [28.426846, 77.088834] La primera coordenada de la tupla es la latitud, la segunda coordenada es la longitud
+loc2 = [28.394231, 77.050308]
+a = hs.haversine(loc1, loc2)  Esta función devuelve la distancia en km. Lo que nos funciona ya que todos los requerimientos piden kilometros como unidades
+""""
