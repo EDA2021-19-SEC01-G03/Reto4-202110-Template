@@ -141,7 +141,6 @@ def addConnection(catalog, connection):
 def addConnectionEdge(graph, originInfo, destinyInfo):
     costo = hs.haversine(originInfo['pos'], destinyInfo['pos'])
     gr.addEdge(graph, originInfo['name'], destinyInfo['name'], costo)
-    print(costo)
 
 
 # Funciones para creacion de datos
