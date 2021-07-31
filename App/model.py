@@ -46,11 +46,13 @@ def newCatalog():
     """
     Crea un catalogo vacio
     """
-    catalog = {'hashCountryCap': None, 'hashidInfo': None, 'GraphName': None }
+    catalog = {'hashCountryCap': None, 'hashidInfo': None, 'GraphName': None, 'FirstPoint': None, 'LastCountry': None}
     
     catalog['hashCountryCap'] = mp.newMap(maptype='PROBING')
     catalog['hashidInfo'] = mp.newMap(maptype='PROBING')
     catalog['GraphName'] = gr.newGraph(directed=True, size=0)
+    catalog['FirstPoint'] = lt.newList('ARRAY_LIST')
+    catalog['LastCountry'] = lt.newList('ARRAY_LIST')
     
     
     
@@ -58,10 +60,27 @@ def newCatalog():
     return catalog
 # Funciones para agregar informacion al catalogo
 
+def FirstPoint(catalog, elem): 
+    info = {'name': elem['name'], 'id': elem['landing_point_id'], 
+            'latitude': elem['latitude'], 'longitude': elem['longitude']}
+    
+    lt.addLast(catalog['FirstPoint'], info)
+
+
+def InfoCountry(catalog, coun):
+    info = {'country': coun['CountryName'], 'population': coun['Population'],
+             'internet_users':coun['Internet users']}
+    return info
+
+
+    
+
 
 def addCountry(catalog, country):
     addCountryHash(catalog['hashCountryCap'], country)
     addCountryGraph(catalog['GraphName'], country)
+    info = InfoCountry(catalog, country)
+    lt.addLast(catalog['LastCountry'], info)
 
 
 def addCountryHash(hashCountry, country):
@@ -88,7 +107,7 @@ def addLandingPointGraph(graph, countryHash,  landingPoint):
     landingPointName = landingPoint['name'].split(',')[0]
     landingPointPos = [float(landingPoint['latitude']), float(landingPoint['longitude'])]
     gr.insertVertex(graph, landingPointName)
-    #Se revisa la existencia de la capital y se crean las conecciones
+    #Se revisa la existencia de la capital y se crean las conexiones
     landingPointCount = landingPoint['name'].split(',')[-1].strip()
     countryCapInfo = getCountryCap(countryHash, landingPointCount)
     cond = gr.containsVertex(graph, countryCapInfo['name'])

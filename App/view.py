@@ -38,7 +38,7 @@ def printMenu():
     print("**********Bienvenido**********")
     print("1- Iniciar el catalogo")
     print("2- Cargar información al catalogo")
-    print("3- (Requerimiento 1) Encontrar la cantidad de clusteres en la red" + 
+    print("3- (Requerimiento 1) Encontrar la cantidad de clusteres en la red " + 
           "y comprobar si dos landing points pertenecen al mismo cluster")
     print("4- (Requerimiento 2) Encontrar la ruta minima para enviar información entre dos paises")
     print("5- (Requerimiento 3) Identificar la red de expansión minima")
@@ -46,6 +46,19 @@ def printMenu():
     print("*******************************")
     
 catalog = None
+
+def loadInfo(tuple): 
+    print('Total of landing points: '+ str(tuple[1]))
+    print('Total of connections between landing points: '+ str(tuple[2]))
+    print('Total of countries: ' + str(tuple[0]))
+    
+    first = lt.firstElement(catalog['FirstPoint'])
+    print('First Landing point:')
+    print('Name: ' + first['name'] +' Id: ' + str(first['id']) + ' Latitude: ' + first['latitude'] +' Longitude: ' +first['longitude'])
+    last = lt.lastElement(catalog['LastCountry'])
+    print('Last country:')
+    print ('Name: ' + last['country'] +' Population: ' + str(last['population']) + ' Internet users: ' + str(last['internet_users']))
+
 
 """
 Menu principal
@@ -63,7 +76,8 @@ while True:
         print("Cargando información al catalogo ....")
         #Se carga información al catalogo
         test = controller.loadData(catalog)
-        print(test)
+        result = loadInfo(test)
+
         print("Se ha cargado la información con exito")
         #printCargaDatos(catalog)
 

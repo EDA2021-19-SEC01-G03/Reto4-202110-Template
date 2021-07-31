@@ -44,36 +44,48 @@ def initCatalog():
 
 def loadData(catalog):
     retorno = -1.0
-    loadCountries(catalog)
+    countries = loadCountries(catalog)
     print('Se cargaron Paises')
-    loadLandingPoints(catalog)
+    landing = loadLandingPoints(catalog)
     print('Se cargaron Landing Points')
-    loadConnections(catalog)
-    print('Se cargaron conecciones')
+    connect = loadConnections(catalog)
+    print('Se cargaron conexiones')
     
-    return retorno
+    return countries, landing, connect
 
 
 def loadConnections(catalog):
     connectionsfile = cf.data_dir + 'connections.csv'
     input_file = csv.DictReader(open(connectionsfile, encoding="utf-8-sig"), delimiter=',')
+
+    con = 0
     for entry in input_file:
         model.addConnection(catalog, entry)
-    return None
+        con += 1
+    return con
 
 
 def loadCountries(catalog):
     countriesfile = cf.data_dir + 'countries.csv'
     input_file = csv.DictReader(open(countriesfile, encoding="utf-8"), delimiter=',')
+    coun = 0
     for entry in input_file:
         model.addCountry(catalog, entry)
+        coun += 1
+    return coun
 
 
 def loadLandingPoints(catalog):
     landingPointsfile = cf.data_dir + 'landing_points.csv'
     input_file = csv.DictReader(open(landingPointsfile, encoding="utf-8"), delimiter=',')
+    land = 0
     for entry in input_file:
+        if land == 0:
+            model.FirstPoint(catalog, entry)
         model.addLandingPoint(catalog, entry)
+        
+        land += 1
+    return land
 
 
 # Funciones de ordenamiento
