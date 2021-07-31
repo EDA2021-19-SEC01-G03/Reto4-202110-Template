@@ -62,6 +62,8 @@ while True:
     elif int(inputs[0]) == 2:
         print("Cargando información al catalogo ....")
         #Se carga información al catalogo
+        test = controller.loadData(catalog)
+        print(test)
         print("Se ha cargado la información con exito")
         #printCargaDatos(catalog)
 

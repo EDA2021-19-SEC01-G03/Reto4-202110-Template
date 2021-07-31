@@ -45,25 +45,26 @@ def initCatalog():
 def loadData(catalog):
     retorno = -1.0
     loadCountries(catalog)
+    print('Se cargaron Paises')
     loadLandingPoints(catalog)
+    print('Se cargaron Landing Points')
     loadConnections(catalog)
+    print('Se cargaron conecciones')
     
     return retorno
 
 
 def loadConnections(catalog):
     connectionsfile = cf.data_dir + 'connections.csv'
-    input_file = csv.DictReader(open(connectionsfile, encoding="utf-8"), delimiter=',')
-    n = 0
+    input_file = csv.DictReader(open(connectionsfile, encoding="utf-8-sig"), delimiter=',')
     for entry in input_file:
         model.addConnection(catalog, entry)
-        n += 1
+    return None
 
 
 def loadCountries(catalog):
     countriesfile = cf.data_dir + 'countries.csv'
     input_file = csv.DictReader(open(countriesfile, encoding="utf-8"), delimiter=',')
-    n = 0
     for entry in input_file:
         model.addCountry(catalog, entry)
 
@@ -71,7 +72,6 @@ def loadCountries(catalog):
 def loadLandingPoints(catalog):
     landingPointsfile = cf.data_dir + 'landing_points.csv'
     input_file = csv.DictReader(open(landingPointsfile, encoding="utf-8"), delimiter=',')
-    n = 0
     for entry in input_file:
         model.addLandingPoint(catalog, entry)
 

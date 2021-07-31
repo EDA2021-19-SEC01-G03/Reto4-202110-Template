@@ -75,7 +75,7 @@ def addCountryGraph(graph, country):
 
 def addLandingPoint(catalog, landingPoint):
     addLandingPointHash(catalog['hashidInfo'], landingPoint)
-    addLandingPointGraph(catalog['GraphName'], landingPoint)
+    addLandingPointGraph(catalog['GraphName'], catalog['hashCountryCap'], landingPoint)
 
 
 def addLandingPointHash(hashidInfo, LandingPoint):
@@ -83,13 +83,43 @@ def addLandingPointHash(hashidInfo, LandingPoint):
     return None
 
 
+def addLandingPointGraph(graph, countryHash,  landingPoint):
+    #Se añade el vertice y se busca la info del Landing Point
+    landingPointName = landingPoint['name'].split(',')[0]
+    landingPointPos = [float(landingPoint['latitude']), float(landingPoint['longitude'])]
+    gr.insertVertex(graph, landingPointName)
+    #Se revisa la existencia de la capital y se crean las conecciones
+    landingPointCount = landingPoint['name'].split(',')[-1].strip()
+    countryCapInfo = getCountryCap(countryHash, landingPointCount)
+    cond = gr.containsVertex(graph, countryCapInfo['name'])
+    if cond:
+        addCapitalConnection(graph, landingPointName, countryCapInfo['name'], landingPointPos, countryCapInfo['pos'])
+
+
+def addCapitalConnection(graph, landingPointName, capitalName, landingPointPos, capitalPos):
+    costo = hs.haversine(landingPointPos, capitalPos)
+    gr.addEdge(graph, landingPointName, capitalName, costo)
+    gr.addEdge(graph, capitalName, landingPointName, costo)
+
+def getCountryCap(countryHash, country):
+    pair = mp.get(countryHash, country)
+    if pair:
+        countryInfo = me.getValue(pair)
+        name = countryInfo['CapitalName']
+        pos = [float(countryInfo['CapitalLatitude']), float(countryInfo['CapitalLongitude'])]
+        retorno = {'name':name, 'pos': pos}
+        return retorno
+    else:
+        return None
+
+
 def getLandingPointInfo(hashidInfo, LandingPointid):
     pair = mp.get(hashidInfo, LandingPointid)
     retorno = {'name': None, 'pos': None}
     if pair:
         info = me.getValue(pair)
-        name = info['name'].split()[0]
-        pos = [info['latitude'], info['longitude']]
+        name = info['name'].split(',')[0]
+        pos = [float(info['latitude']), float(info['longitude'])]
         retorno['name'] = name
         retorno['pos'] = pos
         return retorno
@@ -111,6 +141,7 @@ def addConnection(catalog, connection):
 def addConnectionEdge(graph, originInfo, destinyInfo):
     costo = hs.haversine(originInfo['pos'], destinyInfo['pos'])
     gr.addEdge(graph, originInfo['name'], destinyInfo['name'], costo)
+    print(costo)
 
 
 # Funciones para creacion de datos
