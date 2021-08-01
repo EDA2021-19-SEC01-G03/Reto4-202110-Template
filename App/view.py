@@ -23,7 +23,10 @@
 import config as cf
 import sys
 import controller
+import threading
+from DISClib.ADT import stack
 from DISClib.ADT import list as lt
+from DISClib.ADT import graph as gr
 assert cf
 
 
@@ -47,60 +50,89 @@ def printMenu():
     
 catalog = None
 
-def loadInfo(tuple): 
-    print('Total of landing points: '+ str(tuple[1]))
-    print('Total of connections between landing points: '+ str(tuple[2]))
-    print('Total of countries: ' + str(tuple[0]))
+def result2(stackPath, cA, cB ): 
+
+    minPath = 0
+    first = lt.firstElement(stackPath)['vertexA']
+    last = lt.lastElement(stackPath)['vertexB']
+
+    for e in lt.iterator(stackPath):
+        origin = e['vertexA']
+        destin = e['vertexB']
+        weight = e['weight']
+
+        print('Desde: ' + origin +' Hasta: ' + destin + ' // Con una distancia de: ' + str(weight))
+        
+        minPath += weight
     
-    first = lt.firstElement(catalog['FirstPoint'])
-    print('First Landing point:')
-    print('Name: ' + first['name'] +' Id: ' + str(first['id']) + ' Latitude: ' + first['latitude'] +' Longitude: ' +first['longitude'])
-    last = lt.lastElement(catalog['LastCountry'])
-    print('Last country:')
-    print ('Name: ' + last['country'] +' Population: ' + str(last['population']) + ' Internet users: ' + str(last['internet_users']))
+    print('\nDistancia total entre ' + cA + ' (' + first +')'+ ' y ' + cB + ' (' + last +')' +' es de: ' + str(minPath) +' km.\n')
+
 
 
 """
 Menu principal
 """
-while True:
-    printMenu()
-    inputs = input('Seleccione una opción para continuar\n>')
-    if int(inputs[0]) == 1:
-        print("Iniciando el catalogo ....")
-        #Se inicia el catalogo
-        catalog = controller.initCatalog()
-        print("El catalogo se ha iniciado con exito\n")
 
-    elif int(inputs[0]) == 2:
-        print("Cargando información al catalogo ....")
-        #Se carga información al catalogo
-        test = controller.loadData(catalog)
-        result = loadInfo(test)
 
-        print("Se ha cargado la información con exito")
-        #printCargaDatos(catalog)
+def thread_cycle():
+    
 
-    elif int(inputs[0]) == 3:
-        print("Introduzca el nombre de los dos landing points")
-        LandingPoint1 = input("Nombre del primer Landing Point:\n>")
-        LandingPoint2 = input("Nombre del segundo Landing Point:\n>")
-        print("Cargando información ....")
-        #Req1 = getReq1(catalog, LandingPoint1, LandingPoint2)
-        #printReq1(Req1)
+    while True:
 
-    elif int(inputs[0]) == 4:
-        print("Introduzca el nombre de dos paises. El primero es el pais de origen del cable")
-        paisA = input("Nombre del pais de origen:\n>")
-        paisB = input("Nombre del pais destino:\n")
-        print("Cargando información ....")
-        #Req2 = getReq2(catalog, paisA, paisB)
-        #printReq2(Req2)
+        printMenu()
+        inputs = input('Seleccione una opción para continuar\n>')
+        if int(inputs[0]) == 1:
+            print("Iniciando el catalogo ....")
+            #Se inicia el catalogo
+            catalog = controller.initCatalog()
+            print("El catalogo se ha iniciado con exito\n")
 
-    elif int(inputs[0]) == 5:
-        print("Cargando información ....")
-        #Req3 = getReq3(catalog)
-        #printReq3(Req3)
-    else:
-        sys.exit(0)
-sys.exit(0)
+        elif int(inputs[0]) == 2:
+            print("Cargando información al catalogo ....")
+            #Se carga información al catalogo
+            tuple = controller.loadData(catalog)
+            print('Total of landing points: '+ str(tuple[1]))
+            print('Total of connections between landing points: '+ str(tuple[2]))
+            print('Total of countries: ' + str(tuple[0]))
+            
+            first = lt.firstElement(catalog['FirstPoint'])
+            print('First Landing point:')
+            print('Name: ' + first['name'] +' Id: ' + str(first['id']) + ' Latitude: ' + first['latitude'] +' Longitude: ' +first['longitude'])
+            last = lt.lastElement(catalog['LastCountry'])
+            print('Last country:')
+            print ('Name: ' + last['country'] +' Population: ' + str(last['population']) + ' Internet users: ' + str(last['internet_users']))
+            print("Se ha cargado la información con exito")
+            #printCargaDatos(catalog)
+
+        elif int(inputs[0]) == 3:
+            print("Introduzca el nombre de los dos landing points")
+            LandingPoint1 = input("Nombre del primer Landing Point:\n>")
+            LandingPoint2 = input("Nombre del segundo Landing Point:\n>")
+            print("Cargando información ....")
+            #Req1 = getReq1(catalog, LandingPoint1, LandingPoint2)
+            #printReq1(Req1)
+
+        elif int(inputs[0]) == 4:
+            print("Introduzca el nombre de dos paises. El primero es el pais de origen del cable")
+            paisA = input("Nombre del pais de origen:\n>")
+            paisB = input("Nombre del pais destino:\n")
+            print("Cargando información ...\n")
+
+            Req2 = controller.Req2(catalog, paisA, paisB)
+            result2(Req2[0], paisA, paisB)
+            print("Tiempo [ms]: ", f"{Req2[1]:.3f}", "    ||  ", "Memoria [kB]: ", f"{Req2[2]:.3f}")
+
+        elif int(inputs[0]) == 5:
+            print("Cargando información ....")
+            #Req3 = getReq3(catalog)
+            #printReq3(Req3)
+        else:
+            sys.exit(0)
+
+    sys.exit(0)
+
+if __name__ == "__main__":
+    threading.stack_size(67108864)  # 64MB stack
+    sys.setrecursionlimit(2 ** 20)
+    thread = threading.Thread(target=thread_cycle)
+    thread.start()

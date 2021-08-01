@@ -31,7 +31,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.ADT import graph as gr
 from DISClib.DataStructures import mapentry as me
-from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Graphs import dijsktra as djk
 assert cf
 
 """
@@ -71,9 +71,6 @@ def InfoCountry(catalog, coun):
     info = {'country': coun['CountryName'], 'population': coun['Population'],
              'internet_users':coun['Internet users']}
     return info
-
-
-    
 
 
 def addCountry(catalog, country):
@@ -165,6 +162,37 @@ def addConnectionEdge(graph, originInfo, destinyInfo):
 # Funciones para creacion de datos
 
 # Funciones de consulta
+
+
+def Req2(catalog, cA, cB): 
+    """
+    Retorna un stack con la ruta mínima (en km) entre A y B 
+    """
+    #Graph
+    graph = catalog['GraphName']
+
+    #Capital A
+    hA = mp.get(catalog['hashCountryCap'], cA)
+    capitalA = me.getValue(hA)['CapitalName']
+    #Capital B
+    hB = mp.get(catalog['hashCountryCap'], cB)
+    capitalB = me.getValue(hB)['CapitalName']
+    
+    #Recorridos mínimos de A
+    pathsA = djk.Dijkstra(graph, capitalA)
+
+    minimum = APathB(pathsA, capitalB)
+
+    return minimum
+
+def APathB (pathsA, capitalB):
+
+    return djk.pathTo(pathsA, capitalB)
+
+
+
+
+
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
