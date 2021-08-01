@@ -32,6 +32,7 @@ from DISClib.ADT import map as mp
 from DISClib.ADT import graph as gr
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Graphs import scc as scc
 assert cf
 
 """
@@ -165,6 +166,14 @@ def addConnectionEdge(graph, originInfo, destinyInfo):
 # Funciones para creacion de datos
 
 # Funciones de consulta
+
+
+def getReq1(catalog, landingPoint1, landingPoint2):
+    sccSearch = scc.KosarajuSCC(catalog['GraphName'])
+    clusterNum = sccSearch['components']
+    condicion = scc.stronglyConnected(sccSearch, landingPoint1, landingPoint2)
+    retorno = {'clusterNum': clusterNum, 'condicion': condicion}
+    return retorno
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 

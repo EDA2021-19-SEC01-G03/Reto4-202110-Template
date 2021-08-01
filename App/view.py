@@ -60,6 +60,16 @@ def loadInfo(tuple):
     print ('Name: ' + last['country'] +' Population: ' + str(last['population']) + ' Internet users: ' + str(last['internet_users']))
 
 
+def printReq1(Req1, landingPoint1, landingPoint2):
+    print('***** Resultados del Requerimiento 1 *****')
+    print('Cantidad de clusteres dentro de la red: ' + str(Req1['clusterNum']))
+    if Req1['condicion']:
+        print(str(landingPoint1) + ' y ' + str(landingPoint2) + ' pertenecen al mismo cluster')
+    else:
+        print(str(landingPoint1) + ' y ' + str(landingPoint2) + ' NO pertenecen al mismo cluster')
+    print('**************************************')
+
+
 """
 Menu principal
 """
@@ -86,8 +96,12 @@ while True:
         LandingPoint1 = input("Nombre del primer Landing Point:\n>")
         LandingPoint2 = input("Nombre del segundo Landing Point:\n>")
         print("Cargando información ....")
-        #Req1 = getReq1(catalog, LandingPoint1, LandingPoint2)
-        #printReq1(Req1)
+        Req1 = controller.getReq1(catalog, LandingPoint1, LandingPoint2)
+        print(Req1)
+        printReq1(Req1[0], LandingPoint1, LandingPoint2)
+        print('\n')
+        print("Tiempo [ms]: ", f"{Req1[1]:.3f}", "    ||  ", "Memoria [kB]: ", f"{Req1[2]:.3f}")
+        print('\n')
 
     elif int(inputs[0]) == 4:
         print("Introduzca el nombre de dos paises. El primero es el pais de origen del cable")
