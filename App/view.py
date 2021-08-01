@@ -29,6 +29,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import graph as gr
 assert cf
 
+sys.setrecursionlimit(2**20)
 
 """
 La vista se encarga de la interacción con el usuario
@@ -67,6 +68,16 @@ def result2(stackPath, cA, cB ):
     
     print('\nDistancia total entre ' + cA + ' (' + first +')'+ ' y ' + cB + ' (' + last +')' +' es de: ' + str(minPath) +' km.\n')
 
+
+
+def printReq1(Req1, landingPoint1, landingPoint2):
+    print('***** Resultados del Requerimiento 1 *****')
+    print('Cantidad de clusteres dentro de la red: ' + str(Req1['clusterNum']))
+    if Req1['condicion']:
+        print(str(landingPoint1) + ' y ' + str(landingPoint2) + ' pertenecen al mismo cluster')
+    else:
+        print(str(landingPoint1) + ' y ' + str(landingPoint2) + ' NO pertenecen al mismo cluster')
+    print('**************************************')
 
 
 """
@@ -109,8 +120,12 @@ def thread_cycle():
             LandingPoint1 = input("Nombre del primer Landing Point:\n>")
             LandingPoint2 = input("Nombre del segundo Landing Point:\n>")
             print("Cargando información ....")
-            #Req1 = getReq1(catalog, LandingPoint1, LandingPoint2)
-            #printReq1(Req1)
+            Req1 = controller.getReq1(catalog, LandingPoint1, LandingPoint2)
+            print(Req1)
+            printReq1(Req1[0], LandingPoint1, LandingPoint2)
+            print('\n')
+            print("Tiempo [ms]: ", f"{Req1[1]:.3f}", "    ||  ", "Memoria [kB]: ", f"{Req1[2]:.3f}")
+            print('\n')
 
         elif int(inputs[0]) == 4:
             print("Introduzca el nombre de dos paises. El primero es el pais de origen del cable")
@@ -124,7 +139,7 @@ def thread_cycle():
 
         elif int(inputs[0]) == 5:
             print("Cargando información ....")
-            #Req3 = getReq3(catalog)
+            Req3 = controller.getReq3(catalog)
             #printReq3(Req3)
         else:
             sys.exit(0)

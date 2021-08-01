@@ -31,7 +31,13 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.ADT import graph as gr
 from DISClib.DataStructures import mapentry as me
+<<<<<<< HEAD
 from DISClib.Algorithms.Graphs import dijsktra as djk
+=======
+from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Graphs import scc as scc
+from DISClib.Algorithms.Graphs import prim as pr
+>>>>>>> 1ab1eb88a709b6b835cec5f45200fd63e7c97e87
 assert cf
 
 """
@@ -190,10 +196,26 @@ def APathB (pathsA, capitalB):
     return djk.pathTo(pathsA, capitalB)
 
 
+def getReq1(catalog, landingPoint1, landingPoint2):
+    sccSearch = scc.KosarajuSCC(catalog['GraphName'])
+    clusterNum = sccSearch['components']
+    condicion = scc.stronglyConnected(sccSearch, landingPoint1, landingPoint2)
+    retorno = {'clusterNum': clusterNum, 'condicion': condicion}
+    return retorno
 
 
-
-
+def getReq3(catalog):
+    mstSearch = pr.PrimMST(catalog['GraphName'])
+    peso = pr.weightMST(catalog['GraphName'],mstSearch) #Este es el peso del arbol
+    print(peso)
+    print(mp.size(mstSearch['edgeTo'])) #Este creo que es el numero de vertices en el mst
+    print(mstSearch['edgeTo'])
+    print('bazinga bazonga bazinga')
+    print(lt.size(mstSearch['mst']))
+    print(mstSearch['mst'])
+    
+    #Falta encontrar como encontrar la rama mas larga
+    return None
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento

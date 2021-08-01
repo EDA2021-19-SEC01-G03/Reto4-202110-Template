@@ -115,6 +115,48 @@ def Req2(catalog, cA, cB):
 
 
 
+def getReq1(catalog, landingPoint1, landingPoint2):
+    
+    delta_time = -1.0
+    delta_memory = -1.0
+    
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    
+    result = model.getReq1(catalog, landingPoint1, landingPoint2)
+    
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+    
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+    
+    return result, delta_time, delta_memory
+
+def getReq3(catalog):
+    
+    delta_time = -1.0
+    delta_memory = -1.0
+    
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+    
+    result = model.getReq3(catalog)
+    
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+    
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+    
+    return result, delta_time, delta_memory
+
+# Funciones para medir tiempo y memoria
+
 
 def getTime():
     """
