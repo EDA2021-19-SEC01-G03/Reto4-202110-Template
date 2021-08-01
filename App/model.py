@@ -33,6 +33,7 @@ from DISClib.ADT import graph as gr
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Graphs import scc as scc
+from DISClib.Algorithms.Graphs import prim as pr
 assert cf
 
 """
@@ -175,6 +176,19 @@ def getReq1(catalog, landingPoint1, landingPoint2):
     retorno = {'clusterNum': clusterNum, 'condicion': condicion}
     return retorno
 
+
+def getReq3(catalog):
+    mstSearch = pr.PrimMST(catalog['GraphName'])
+    peso = pr.weightMST(catalog['GraphName'],mstSearch) #Este es el peso del arbol
+    print(peso)
+    print(mp.size(mstSearch['edgeTo'])) #Este creo que es el numero de vertices en el mst
+    print(mstSearch['edgeTo'])
+    print('bazinga bazonga bazinga')
+    print(lt.size(mstSearch['mst']))
+    print(mstSearch['mst'])
+    
+    #Falta encontrar como encontrar la rama mas larga
+    return None
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento

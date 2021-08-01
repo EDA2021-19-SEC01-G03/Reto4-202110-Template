@@ -26,6 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 
+sys.setrecursionlimit(2**20)
 
 """
 La vista se encarga de la interacción con el usuario
@@ -113,7 +114,7 @@ while True:
 
     elif int(inputs[0]) == 5:
         print("Cargando información ....")
-        #Req3 = getReq3(catalog)
+        Req3 = controller.getReq3(catalog)
         #printReq3(Req3)
     else:
         sys.exit(0)
