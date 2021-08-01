@@ -31,13 +31,9 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.ADT import graph as gr
 from DISClib.DataStructures import mapentry as me
-<<<<<<< HEAD
 from DISClib.Algorithms.Graphs import dijsktra as djk
-=======
-from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Graphs import scc as scc
 from DISClib.Algorithms.Graphs import prim as pr
->>>>>>> 1ab1eb88a709b6b835cec5f45200fd63e7c97e87
 assert cf
 
 """
