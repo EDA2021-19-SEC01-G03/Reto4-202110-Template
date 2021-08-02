@@ -80,6 +80,14 @@ def printReq1(Req1, landingPoint1, landingPoint2):
     print('**************************************')
 
 
+def printReq3(Req3):
+    print('El costo total en distancia en km de la red de expansión minima es de: ' + str(Req3[0]))
+    print('El numero de landing Points conectados a la red de expansion minima es de: ' + str(Req3[1]))
+    for entry in lt.iterator(Req3[2]):
+        print('Recorrido desde ' + str(entry[0]) + ' hasta ' + str(entry[1]))
+    print('arcos en la rama es de: ' + str(lt.size(Req3[2])))
+
+
 """
 Menu principal
 """
@@ -141,7 +149,7 @@ def thread_cycle():
         elif int(inputs[0]) == 5:
             print("Cargando información ....")
             Req3 = controller.getReq3(catalog)
-            print(Req3[0])
+            printReq3(Req3[0])
             print("Tiempo [ms]: ", f"{Req3[1]:.3f}", "    ||  ", "Memoria [kB]: ", f"{Req3[2]:.3f}")
         else:
             sys.exit(0)
