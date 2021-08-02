@@ -213,7 +213,7 @@ def getReq3(catalog):
     hash= mstSearch['edgeTo']
 
     vertex = gr.vertices(catalog['GraphName'])
-    size = mp.size(mstSearch['edgeTo']))
+    size = mp.size(mstSearch['edgeTo'])
 
     
     mayor = 0 
