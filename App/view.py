@@ -66,7 +66,7 @@ def result2(stackPath, cA, cB ):
         
         minPath += weight
     
-    print('\nDistancia total entre ' + cA + ' (' + first +')'+ ' y ' + cB + ' (' + last +')' +' es de: ' + str(minPath) +' km.\n')
+    print('\nTamaño de la ruta entre: ' + cA + ' (' + first +')'+ ' y ' + cB + ' (' + last +')' +' es de: ' + str(minPath) +' km.\n')
 
 
 
@@ -103,7 +103,7 @@ def thread_cycle():
             #Se carga información al catalogo
             tuple = controller.loadData(catalog)
             print('Total of landing points: '+ str(tuple[1]))
-            print('Total of connections between landing points: '+ str(tuple[2]))
+            print('Total of connections between landing point2s: '+ str(tuple[2]))
             print('Total of countries: ' + str(tuple[0]))
             
             first = lt.firstElement(catalog['FirstPoint'])
@@ -113,7 +113,7 @@ def thread_cycle():
             print('Last country:')
             print ('Name: ' + last['country'] +' Population: ' + str(last['population']) + ' Internet users: ' + str(last['internet_users']))
             print("Se ha cargado la información con exito")
-            #printCargaDatos(catalog)
+            print(catalog['hashInfoName'])
 
         elif int(inputs[0]) == 3:
             print("Introduzca el nombre de los dos landing points")
@@ -137,10 +137,13 @@ def thread_cycle():
             result2(Req2[0], paisA, paisB)
             print("Tiempo [ms]: ", f"{Req2[1]:.3f}", "    ||  ", "Memoria [kB]: ", f"{Req2[2]:.3f}")
 
+            Req4 = controller.Req4(catalog, Req2, 2)
+
         elif int(inputs[0]) == 5:
             print("Cargando información ....")
             Req3 = controller.getReq3(catalog)
-            #printReq3(Req3)
+            print(Req3[0])
+            print("Tiempo [ms]: ", f"{Req3[1]:.3f}", "    ||  ", "Memoria [kB]: ", f"{Req3[2]:.3f}")
         else:
             sys.exit(0)
 

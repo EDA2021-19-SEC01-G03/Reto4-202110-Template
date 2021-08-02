@@ -27,9 +27,11 @@
 
 import config as cf
 import haversine as hs
+import folium
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.ADT import graph as gr
+from DISClib.ADT import stack as st
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Algorithms.Graphs import scc as scc
@@ -48,13 +50,15 @@ def newCatalog():
     """
     Crea un catalogo vacio
     """
-    catalog = {'hashCountryCap': None, 'hashidInfo': None, 'GraphName': None, 'FirstPoint': None, 'LastCountry': None}
+    catalog = {'hashCountryCap': None, 'hashidInfo': None, 'GraphName': None, 'FirstPoint': None, 'LastCountry': None, 'hashInfoName':None}
     
     catalog['hashCountryCap'] = mp.newMap(maptype='PROBING')
     catalog['hashidInfo'] = mp.newMap(maptype='PROBING')
     catalog['GraphName'] = gr.newGraph(directed=True, size=0)
     catalog['FirstPoint'] = lt.newList('ARRAY_LIST')
     catalog['LastCountry'] = lt.newList('ARRAY_LIST')
+    catalog['hashInfoName'] = mp.newMap(maptype='PROBING')
+    
     
     
     
@@ -94,12 +98,17 @@ def addCountryGraph(graph, country):
 def addLandingPoint(catalog, landingPoint):
     addLandingPointHash(catalog['hashidInfo'], landingPoint)
     addLandingPointGraph(catalog['GraphName'], catalog['hashCountryCap'], landingPoint)
+    addLPinfo(catalog['hashInfoName'], landingPoint)
 
 
 def addLandingPointHash(hashidInfo, LandingPoint):
     mp.put(hashidInfo, LandingPoint['landing_point_id'], LandingPoint)
     return None
 
+
+def addLPinfo(map, lp): 
+    name = lp['name'].split(',')[0]
+    mp.put(map, name, lp)
 
 def addLandingPointGraph(graph, countryHash,  landingPoint):
     #Se añade el vertice y se busca la info del Landing Point
@@ -165,6 +174,12 @@ def addConnectionEdge(graph, originInfo, destinyInfo):
 
 # Funciones de consulta
 
+def getReq1(catalog, landingPoint1, landingPoint2):
+    sccSearch = scc.KosarajuSCC(catalog['GraphName'])
+    clusterNum = sccSearch['components']
+    condicion = scc.stronglyConnected(sccSearch, landingPoint1, landingPoint2)
+    retorno = {'clusterNum': clusterNum, 'condicion': condicion}
+    return retorno
 
 def Req2(catalog, cA, cB): 
     """
@@ -191,17 +206,55 @@ def APathB (pathsA, capitalB):
 
     return djk.pathTo(pathsA, capitalB)
 
-
-def getReq1(catalog, landingPoint1, landingPoint2):
-    sccSearch = scc.KosarajuSCC(catalog['GraphName'])
-    clusterNum = sccSearch['components']
-    condicion = scc.stronglyConnected(sccSearch, landingPoint1, landingPoint2)
-    retorno = {'clusterNum': clusterNum, 'condicion': condicion}
-    return retorno
-
-
 def getReq3(catalog):
     mstSearch = pr.PrimMST(catalog['GraphName'])
+
+    
+    hash= mstSearch['edgeTo']
+
+    vertex = gr.vertices(catalog['GraphName'])
+
+    
+    mayor = 0 
+    stackM = ""
+    name=''
+
+    for v in lt.iterator(vertex):
+
+        path = st.newStack()
+        edge = mp.get(hash, v)
+
+        value1 = 0
+        value2= 0 
+        
+        if edge is not None:
+            value1 = me.getValue(edge)['vertexA']
+            value2 = me.getValue(edge)['vertexB']
+
+
+        while value1 != None:
+            st.push(path, value1)
+            
+            
+            edge = mp.get(hash, value1)
+
+            if edge is not None:
+                value1 = me.getValue(edge)['vertexA']
+                value2 = me.getValue(edge)['vertexB']
+            else:
+                value1 = None
+
+        size = st.size(path)
+        
+
+        if size >= mayor: 
+            mayor = size
+            name = v
+            stackM = path
+    return mayor, name, stackM
+        
+
+    """
     peso = pr.weightMST(catalog['GraphName'],mstSearch) #Este es el peso del arbol
     print(peso)
     print(mp.size(mstSearch['edgeTo'])) #Este creo que es el numero de vertices en el mst
@@ -209,9 +262,43 @@ def getReq3(catalog):
     print('bazinga bazonga bazinga')
     print(lt.size(mstSearch['mst']))
     print(mstSearch['mst'])
+    """
     
     #Falta encontrar como encontrar la rama mas larga
     return None
+
+
+
+def Req4(catalog, result, req): 
+
+    if req == 2:
+        stack = result
+
+        for e in lt.iterator(stack): 
+
+            vertexA = e['vertexA']
+            valA = mp.get(catalog['hashInfoName'], vertexA)
+            vertexB = e['vertexB']
+            valB = mp.get(catalog['hashInfoName'], vertexB)
+
+            mA = folium.Map(location =[valA['latitude'], valA['longitude']])
+            mB = folium.Map(location =[valB['latitude'], valB['longitude']])
+
+            folium.Marker([valA['latitude'], valA['longitude']], popup=vertexA).add_to(mA)
+            folium.Marker([valB['latitude'], valB['longitude']], popup=vertexB).add_to(mB)
+            mA.save(cf.data_dir + '/Docs')
+
+
+
+            
+
+            
+
+
+
+
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento

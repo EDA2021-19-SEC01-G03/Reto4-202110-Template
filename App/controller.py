@@ -155,6 +155,14 @@ def getReq3(catalog):
     
     return result, delta_time, delta_memory
 
+
+
+def Req4(catalog, result, req):
+
+    return model.Req4
+
+
+
 # Funciones para medir tiempo y memoria
 
 
