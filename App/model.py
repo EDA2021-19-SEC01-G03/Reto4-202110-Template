@@ -213,7 +213,7 @@ def getReq3(catalog):
     hash= mstSearch['edgeTo']
 
     vertex = mp.keySet(hash)
-    size = mp.size(mstSearch['edgeTo'])
+    retsize = mp.size(mstSearch['edgeTo'])
 
     
     mayor = 0 
@@ -257,7 +257,7 @@ def getReq3(catalog):
             mayor = size
             name = v
             stackM = path
-    return peso, size, stackM
+    return peso, retsize, stackM
         
 
     """
