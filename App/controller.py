@@ -157,9 +157,16 @@ def getReq3(catalog):
 
 
 
-def Req4(catalog, result, req):
+def Req4_2(catalog, result):
 
-    return model.Req4
+    return model.Req4_2(catalog, result)
+
+def Req4_3(catalog, result):
+
+    return model.Req4_3(catalog, result)
+
+def Req4_1(catalog,result, Landing1, Landing2):
+    return model.Req4_1(catalog,result, Landing1, Landing2)
 
 
 

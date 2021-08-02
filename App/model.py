@@ -79,11 +79,20 @@ def InfoCountry(catalog, coun):
     return info
 
 
+def InfoCap(catalog, coun):
+    name = coun['CapitalName'].split(',')[0]
+    info = {'name': name, 'latitude': coun['CapitalLatitude'],
+             'longitude':coun['CapitalLongitude']}
+    return name, info
+
+
 def addCountry(catalog, country):
     addCountryHash(catalog['hashCountryCap'], country)
     addCountryGraph(catalog['GraphName'], country)
     info = InfoCountry(catalog, country)
     lt.addLast(catalog['LastCountry'], info)
+    info2 = InfoCap(catalog, country)
+    mp.put(catalog['hashInfoName'], info2[0], info2[1])
 
 
 def addCountryHash(hashCountry, country):
@@ -97,7 +106,7 @@ def addCountryGraph(graph, country):
 
 def addLandingPoint(catalog, landingPoint):
     addLandingPointHash(catalog['hashidInfo'], landingPoint)
-    addLandingPointGraph(catalog['GraphName'], catalog['hashCountryCap'], landingPoint)
+    addLandingPointGraph(catalog,catalog['GraphName'], catalog['hashCountryCap'], landingPoint)
     addLPinfo(catalog['hashInfoName'], landingPoint)
 
 
@@ -110,11 +119,12 @@ def addLPinfo(map, lp):
     name = lp['name'].split(',')[0]
     mp.put(map, name, lp)
 
-def addLandingPointGraph(graph, countryHash,  landingPoint):
+def addLandingPointGraph(catalog, graph, countryHash,  landingPoint):
     #Se añade el vertice y se busca la info del Landing Point
     landingPointName = landingPoint['name'].split(',')[0]
     landingPointPos = [float(landingPoint['latitude']), float(landingPoint['longitude'])]
     gr.insertVertex(graph, landingPointName)
+    
     #Se revisa la existencia de la capital y se crean las conexiones
     landingPointCount = landingPoint['name'].split(',')[-1].strip()
     countryCapInfo = getCountryCap(countryHash, landingPointCount)
@@ -179,7 +189,7 @@ def getReq1(catalog, landingPoint1, landingPoint2):
     clusterNum = sccSearch['components']
     condicion = scc.stronglyConnected(sccSearch, landingPoint1, landingPoint2)
     retorno = {'clusterNum': clusterNum, 'condicion': condicion}
-    return retorno
+    return retorno, sccSearch
 
 def Req2(catalog, cA, cB): 
     """
@@ -274,25 +284,118 @@ def getReq3(catalog):
     return None
 
 
+def Req4_1(catalog,result, first, last):
 
-def Req4(catalog, result, req): 
+    struct = result['idscc']
+    keys = mp.keySet(struct)
 
-    if req == 2:
-        stack = result
+    hash1 = mp.get(catalog['hashInfoName'], first)
+    ent1 = me.getValue(hash1)
 
-        for e in lt.iterator(stack): 
+    land1= mp.get(struct,first)
+    valu1= me.getValue(land1)
+    
+    m = folium.Map(location =[ent1['latitude'], ent1['longitude']], )
+    folium.Marker([ent1['latitude'], ent1['longitude']], popup=valu1, icon=folium.Icon(color='green')).add_to(m)
 
-            vertexA = e['vertexA']
-            valA = mp.get(catalog['hashInfoName'], vertexA)
-            vertexB = e['vertexB']
-            valB = mp.get(catalog['hashInfoName'], vertexB)
+    hash2 = mp.get(catalog['hashInfoName'], last)
+    ent2= me.getValue(hash2)
 
-            mA = folium.Map(location =[valA['latitude'], valA['longitude']])
-            mB = folium.Map(location =[valB['latitude'], valB['longitude']])
+    land2= mp.get(struct,last)
+    valu2= me.getValue(land2)
 
-            folium.Marker([valA['latitude'], valA['longitude']], popup=vertexA).add_to(mA)
-            folium.Marker([valB['latitude'], valB['longitude']], popup=vertexB).add_to(mB)
-            mA.save(cf.data_dir + '/Docs')
+    folium.Marker([ent2['latitude'], ent2['longitude']], popup=valu2, icon=folium.Icon(color='orange')).add_to(m)
+    a = [float(ent1['latitude']), float(ent1['longitude'])]
+    b =  [float(ent2['latitude']), float(ent2['longitude'])]
+    points = [a,b]
+
+    folium.PolyLine(points, color= 'red').add_to(m)
+
+    for e in lt.iterator(keys):
+
+        land = mp.get(struct, e)
+        val = me.getValue(land)
+
+        if e != first or e!= last:
+            valu = mp.get(catalog['hashInfoName'], e)
+            if valu is not None:
+                final =me.getValue(valu)
+
+                folium.Marker([final['latitude'], final['longitude']], popup=val).add_to(m)
+
+
+    m.save(cf.data_dir + '/Req1')
+
+
+
+def Req4_2(catalog, result): 
+
+    f = st.pop(result)
+    vertexA = f['vertexA']
+    valA = mp.get(catalog['hashInfoName'], vertexA)
+    finalA =me.getValue(valA)
+    vertexB = f['vertexB']
+    valB = mp.get(catalog['hashInfoName'], vertexB)
+    finalB =me.getValue(valB)
+
+    m = folium.Map(location =[finalA['latitude'], finalA['longitude']])
+
+    for e in lt.iterator(result): 
+
+
+        
+        vertexA = e['vertexA']
+        valA = mp.get(catalog['hashInfoName'], vertexA)
+        finalA =me.getValue(valA)
+        vertexB = e['vertexB']
+        valB = mp.get(catalog['hashInfoName'], vertexB)
+        finalB =me.getValue(valB)
+
+        a = [float(finalA['latitude']), float(finalA['longitude'])]
+        b =  [float(finalB['latitude']), float(finalB['longitude'])]
+        points = [a,b]
+        
+        folium.Marker([finalA['latitude'], finalA['longitude']]).add_to(m)
+        folium.Marker([finalB['latitude'], finalB['longitude']]).add_to(m)
+
+        folium.PolyLine(points, color= 'red').add_to(m)
+
+        m.save(cf.data_dir + '/Req2')
+
+
+def Req4_3(catalog, result): 
+
+    f = st.pop(result)
+    vertexA = f[0]
+    valA = mp.get(catalog['hashInfoName'], vertexA)
+    finalA =me.getValue(valA)
+    vertexB = f[1]
+    valB = mp.get(catalog['hashInfoName'], vertexB)
+    finalB =me.getValue(valB)
+
+    m = folium.Map(location =[finalA['latitude'], finalA['longitude']])
+
+    for e in lt.iterator(result): 
+
+
+        
+        vertexA = e[0]
+        valA = mp.get(catalog['hashInfoName'], vertexA)
+        finalA =me.getValue(valA)
+        vertexB = e[1]
+        valB = mp.get(catalog['hashInfoName'], vertexB)
+        finalB =me.getValue(valB)
+
+        a = [float(finalA['latitude']), float(finalA['longitude'])]
+        b =  [float(finalB['latitude']), float(finalB['longitude'])]
+        points = [a,b]
+        
+        folium.Marker([finalA['latitude'], finalA['longitude']]).add_to(m)
+        folium.Marker([finalB['latitude'], finalB['longitude']]).add_to(m)
+
+        folium.PolyLine(points, color= 'blue').add_to(m)
+
+        m.save(cf.data_dir + '/Req3')
 
 
 

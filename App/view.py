@@ -128,11 +128,12 @@ def thread_cycle():
             LandingPoint2 = input("Nombre del segundo Landing Point:\n>")
             print("Cargando información ....")
             Req1 = controller.getReq1(catalog, LandingPoint1, LandingPoint2)
-            print(Req1)
-            printReq1(Req1[0], LandingPoint1, LandingPoint2)
+            printReq1(Req1[0][0], LandingPoint1, LandingPoint2)
             print('\n')
             print("Tiempo [ms]: ", f"{Req1[1]:.3f}", "    ||  ", "Memoria [kB]: ", f"{Req1[2]:.3f}")
             print('\n')
+
+            Req4_1 = controller.Req4_1(catalog,Req1[0][1], LandingPoint1, LandingPoint2)
 
         elif int(inputs[0]) == 4:
             print("Introduzca el nombre de dos paises. El primero es el pais de origen del cable")
@@ -144,13 +145,16 @@ def thread_cycle():
             result2(Req2[0], paisA, paisB)
             print("Tiempo [ms]: ", f"{Req2[1]:.3f}", "    ||  ", "Memoria [kB]: ", f"{Req2[2]:.3f}")
 
-            Req4 = controller.Req4(catalog, Req2, 2)
+            Req4_2 = controller.Req4_2(catalog, Req2[0])
+            
 
         elif int(inputs[0]) == 5:
             print("Cargando información ....")
             Req3 = controller.getReq3(catalog)
             printReq3(Req3[0])
             print("Tiempo [ms]: ", f"{Req3[1]:.3f}", "    ||  ", "Memoria [kB]: ", f"{Req3[2]:.3f}")
+
+            Req4_3= controller.Req4_3(catalog, Req3[0][2])
         else:
             sys.exit(0)
 
