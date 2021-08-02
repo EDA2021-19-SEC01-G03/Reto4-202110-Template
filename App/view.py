@@ -113,7 +113,6 @@ def thread_cycle():
             print('Last country:')
             print ('Name: ' + last['country'] +' Population: ' + str(last['population']) + ' Internet users: ' + str(last['internet_users']))
             print("Se ha cargado la información con exito")
-            print(catalog['hashInfoName'])
 
         elif int(inputs[0]) == 3:
             print("Introduzca el nombre de los dos landing points")
