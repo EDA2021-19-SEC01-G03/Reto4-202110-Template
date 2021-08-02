@@ -234,7 +234,7 @@ def getReq3(catalog):
             value2 = me.getValue(edge)['vertexB']
             weight = me.getValue(edge)['weight']
         
-        path = st.push(path, [value1, value2, weight])
+            path = st.push(path, [value1, value2, weight])
 
 
         while value1 != None:
