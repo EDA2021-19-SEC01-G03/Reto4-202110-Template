@@ -208,11 +208,12 @@ def APathB (pathsA, capitalB):
 
 def getReq3(catalog):
     mstSearch = pr.PrimMST(catalog['GraphName'])
-
+    peso = pr.weightMST(catalog['GraphName'], mstSearch)
     
     hash= mstSearch['edgeTo']
 
     vertex = gr.vertices(catalog['GraphName'])
+    size = mp.size(mstSearch['edgeTo']))
 
     
     mayor = 0 
@@ -226,14 +227,18 @@ def getReq3(catalog):
 
         value1 = 0
         value2= 0 
+        weight = 0
         
         if edge is not None:
             value1 = me.getValue(edge)['vertexA']
             value2 = me.getValue(edge)['vertexB']
+            weight = me.getValue(edge)['weight']
+        
+        path = st.push(path, [value1, value2, weight])
 
 
         while value1 != None:
-            st.push(path, value1)
+            st.push(path, [value1, value2, weight])
             
             
             edge = mp.get(hash, value1)
@@ -241,6 +246,7 @@ def getReq3(catalog):
             if edge is not None:
                 value1 = me.getValue(edge)['vertexA']
                 value2 = me.getValue(edge)['vertexB']
+                weight = me.getValue(edge)['weight']
             else:
                 value1 = None
 
@@ -251,7 +257,7 @@ def getReq3(catalog):
             mayor = size
             name = v
             stackM = path
-    return mayor, name, stackM
+    return peso, size, stackM
         
 
     """
